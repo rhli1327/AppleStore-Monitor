@@ -341,7 +341,7 @@ class AppleStoreMonitor:
                         pickup_display = item['partsAvailability'][product_code]['pickupDisplay']
                         store_pickup_product_title = item['partsAvailability'][product_code]['messageTypes']['regular']['storePickupProductTitle']
                         print('\t【{}】{}'.format(pickup_search_quote, store_pickup_product_title))
-                        if pickup_search_quote == '今天可取货' or pickup_display != 'unavailable':
+                        if pickup_search_quote == '今天可取货' or (pickup_display != 'unavailable' and pickup_display != 'ineligible'):
                             available_list.append((store_name, product_code, store_pickup_product_title))
 
                 if len(available_list) > 0:
@@ -369,10 +369,10 @@ class AppleStoreMonitor:
                 Utils.log('{}秒后进行第{}次尝试...'.format(interval, self.count))
 
                 # 整点通知，用于阶段性检测应用是否正常
-                if last_exactly_time != tm_hour and (6 <= tm_hour <= 23):
-                    Utils.send_message(notification_configs,
-                                       Utils.time_title("已扫描{}次，扫描程序运行正常".format(self.count)))
-                    last_exactly_time = tm_hour
+                # if last_exactly_time != tm_hour and (8 <= tm_hour <= 24):
+                #     Utils.send_message(notification_configs,
+                #                        Utils.time_title("已扫描{}次，扫描程序运行正常".format(self.count)))
+                #     last_exactly_time = tm_hour
                 time.sleep(interval)
             else:
                 time.sleep(5)
